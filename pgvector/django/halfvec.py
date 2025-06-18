@@ -1,7 +1,5 @@
 from django import forms
 from django.db.models import Field
-from .. import HalfVector
-
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
 class HalfVectorField(Field):
@@ -24,18 +22,13 @@ class HalfVectorField(Field):
         return 'halfvec(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return HalfVector._from_db(value)
+        return None
 
     def to_python(self, value):
-        if value is None or isinstance(value, HalfVector):
-            return value
-        elif isinstance(value, str):
-            return HalfVector._from_db(value)
-        else:
-            return HalfVector(value)
+            return None
 
     def get_prep_value(self, value):
-        return HalfVector._to_db(value)
+        return None
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
@@ -46,8 +39,6 @@ class HalfVectorField(Field):
 
 class HalfVectorWidget(forms.TextInput):
     def format_value(self, value):
-        if isinstance(value, HalfVector):
-            value = value.to_list()
         return super().format_value(value)
 
 

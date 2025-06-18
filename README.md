@@ -1,5 +1,7 @@
 # pgvector-python
 
+Fork to use only types in Django. No need to install numpy.
+
 [pgvector](https://github.com/pgvector/pgvector) support for Python
 
 Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), [asyncpg](https://github.com/MagicStack/asyncpg), [pg8000](https://github.com/tlocke/pg8000), and [Peewee](https://github.com/coleifer/peewee)
@@ -16,14 +18,24 @@ pip install pgvector
 
 And follow the instructions for your database library:
 
-- [Django](#django)
-- [SQLAlchemy](#sqlalchemy)
-- [SQLModel](#sqlmodel)
-- [Psycopg 3](#psycopg-3)
-- [Psycopg 2](#psycopg-2)
-- [asyncpg](#asyncpg)
-- [pg8000](#pg8000)
-- [Peewee](#peewee)
+- [pgvector-python](#pgvector-python)
+  - [Installation](#installation)
+  - [Django](#django)
+      - [Half-Precision Indexing](#half-precision-indexing)
+  - [SQLAlchemy](#sqlalchemy)
+      - [Half-Precision Indexing](#half-precision-indexing-1)
+      - [Arrays](#arrays)
+  - [SQLModel](#sqlmodel)
+  - [Psycopg 3](#psycopg-3)
+  - [Psycopg 2](#psycopg-2)
+  - [asyncpg](#asyncpg)
+  - [pg8000](#pg8000)
+  - [Peewee](#peewee)
+  - [Reference](#reference)
+    - [Half Vectors](#half-vectors)
+    - [Sparse Vectors](#sparse-vectors)
+  - [History](#history)
+  - [Contributing](#contributing)
 
 Or check out some examples:
 

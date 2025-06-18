@@ -1,7 +1,5 @@
 from django import forms
 from django.db.models import Field
-import numpy as np
-from .. import Vector
 
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
@@ -25,27 +23,27 @@ class VectorField(Field):
         return 'vector(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return Vector._from_db(value)
+        return None
 
     def to_python(self, value):
         if isinstance(value, list):
-            return np.array(value, dtype=np.float32)
-        return Vector._from_db(value)
+            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
+        return None
 
     def get_prep_value(self, value):
-        return Vector._to_db(value)
+        return None
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
 
     def validate(self, value, model_instance):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
+        if isinstance(value, list):
+            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
         super().validate(value, model_instance)
 
     def run_validators(self, value):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
+        if isinstance(value, list):
+            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
         super().run_validators(value)
 
     def formfield(self, **kwargs):
@@ -54,8 +52,8 @@ class VectorField(Field):
 
 class VectorWidget(forms.TextInput):
     def format_value(self, value):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
+        if isinstance(value, list):
+            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
         return super().format_value(value)
 
 
@@ -63,8 +61,8 @@ class VectorFormField(forms.CharField):
     widget = VectorWidget
 
     def has_changed(self, initial, data):
-        if isinstance(initial, np.ndarray):
-            initial = initial.tolist()
+        if isinstance(initial, list):
+            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
         return super().has_changed(initial, data)
 
     def to_python(self, value):

@@ -1,6 +1,5 @@
 from django import forms
 from django.db.models import Field
-from .. import SparseVector
 
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
@@ -24,13 +23,13 @@ class SparseVectorField(Field):
         return 'sparsevec(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return SparseVector._from_db(value)
+        return None
 
     def to_python(self, value):
-        return SparseVector._from_db(value)
+        return None
 
     def get_prep_value(self, value):
-        return SparseVector._to_db(value)
+        return None
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
@@ -41,8 +40,6 @@ class SparseVectorField(Field):
 
 class SparseVectorWidget(forms.TextInput):
     def format_value(self, value):
-        if isinstance(value, SparseVector):
-            value = value.to_text()
         return super().format_value(value)
 
 
