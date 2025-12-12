@@ -27,7 +27,9 @@ class VectorField(Field):
         return 'vector(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        # Original: return Vector._from_db(value)
+        # Original:
+        # return Vector._from_db(value)
+        # New:
         if value is None or isinstance(value, list):
             return value
         return [float(x) for x in value[1:-1].split(',')]
@@ -37,6 +39,7 @@ class VectorField(Field):
         # if isinstance(value, list):
         #     return np.array(value, dtype=np.float32)
         # return Vector._from_db(value)
+        # New:
         if value is None:
             return None
         if isinstance(value, list):
@@ -48,7 +51,9 @@ class VectorField(Field):
         return value
 
     def get_prep_value(self, value):
-        # Original: return Vector._to_db(value)
+        # Original:
+        # return Vector._to_db(value)
+        # New:
         if value is None:
             return None
         if isinstance(value, list):
@@ -62,12 +67,16 @@ class VectorField(Field):
         # Original:
         # if isinstance(value, np.ndarray):
         #     value = value.tolist()
+        # super().validate(value, model_instance)
+        # New:
         super().validate(value, model_instance)
 
     def run_validators(self, value):
         # Original:
         # if isinstance(value, np.ndarray):
         #     value = value.tolist()
+        # super().run_validators(value)
+        # New:
         super().run_validators(value)
 
     def formfield(self, **kwargs):
@@ -80,6 +89,7 @@ class VectorWidget(forms.TextInput):
         # if isinstance(value, np.ndarray):
         #     value = value.tolist()
         # return super().format_value(value)
+        # New:
         if isinstance(value, list):
             return '[' + ','.join(str(v) for v in value) + ']'
         return super().format_value(value)
@@ -93,6 +103,7 @@ class VectorFormField(forms.CharField):
         # if isinstance(initial, np.ndarray):
         #     initial = initial.tolist()
         # return super().has_changed(initial, data)
+        # New:
         if isinstance(initial, list):
             initial = '[' + ','.join(str(v) for v in initial) + ']'
         return super().has_changed(initial, data)
