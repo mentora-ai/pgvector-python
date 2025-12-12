@@ -1,6 +1,10 @@
 from django import forms
 from django.db.models import Field
 
+# Original imports (removed):
+# import numpy as np
+# from .. import Vector
+
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
 class VectorField(Field):
@@ -23,27 +27,47 @@ class VectorField(Field):
         return 'vector(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return None
+        # Original: return Vector._from_db(value)
+        if value is None or isinstance(value, list):
+            return value
+        return [float(x) for x in value[1:-1].split(',')]
 
     def to_python(self, value):
+        # Original:
+        # if isinstance(value, list):
+        #     return np.array(value, dtype=np.float32)
+        # return Vector._from_db(value)
+        if value is None:
+            return None
         if isinstance(value, list):
-            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
-        return None
+            return value
+        if isinstance(value, str):
+            if value == '':
+                return None
+            return [float(x) for x in value[1:-1].split(',')]
+        return value
 
     def get_prep_value(self, value):
-        return None
+        # Original: return Vector._to_db(value)
+        if value is None:
+            return None
+        if isinstance(value, list):
+            return '[' + ','.join(str(v) for v in value) + ']'
+        return value
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
 
     def validate(self, value, model_instance):
-        if isinstance(value, list):
-            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
+        # Original:
+        # if isinstance(value, np.ndarray):
+        #     value = value.tolist()
         super().validate(value, model_instance)
 
     def run_validators(self, value):
-        if isinstance(value, list):
-            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
+        # Original:
+        # if isinstance(value, np.ndarray):
+        #     value = value.tolist()
         super().run_validators(value)
 
     def formfield(self, **kwargs):
@@ -52,8 +76,12 @@ class VectorField(Field):
 
 class VectorWidget(forms.TextInput):
     def format_value(self, value):
+        # Original:
+        # if isinstance(value, np.ndarray):
+        #     value = value.tolist()
+        # return super().format_value(value)
         if isinstance(value, list):
-            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
+            return '[' + ','.join(str(v) for v in value) + ']'
         return super().format_value(value)
 
 
@@ -61,8 +89,12 @@ class VectorFormField(forms.CharField):
     widget = VectorWidget
 
     def has_changed(self, initial, data):
+        # Original:
+        # if isinstance(initial, np.ndarray):
+        #     initial = initial.tolist()
+        # return super().has_changed(initial, data)
         if isinstance(initial, list):
-            raise NotImplementedError("Not implemented. Use full pgvector library instead.")
+            initial = '[' + ','.join(str(v) for v in initial) + ']'
         return super().has_changed(initial, data)
 
     def to_python(self, value):
